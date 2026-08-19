@@ -15,8 +15,14 @@ const US_TO_UK_ABBR = [
 ];
 
 function convertToUK(text) {
-  let out = text;
-  for (const [from, to] of US_TO_UK_TERMS) out = out.split(from).join(to);
+  // Single-pass: match longest terms first to prevent cascading
+  const termMap = new Map(US_TO_UK_TERMS);
+  const sortedTerms = Array.from(termMap.keys()).sort((a, b) => b.length - a.length);
+  const termPattern = new RegExp(
+    "\\b(" + sortedTerms.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|") + ")\\b",
+    "gi"
+  );
+  let out = text.replace(termPattern, m => termMap.get(m.toLowerCase()) || m);
   for (const [re, to] of US_TO_UK_ABBR) out = out.replace(re, to);
   return out;
 }
