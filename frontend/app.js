@@ -1,4 +1,4 @@
-const API = "http://localhost:8000"; // updated in Task 11 to live URL
+const API = "https://crochet-pattern-gen.onrender.com";
 
 // US->UK term mapping for display toggle (applied client-side, model always outputs US)
 const US_TO_UK_TERMS = [
