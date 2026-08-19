@@ -41,7 +41,10 @@ def _llm_generate(description: str, examples: list[Pattern]) -> str:
             f"Reference patterns:\n{example_text}"
         }],
     )
-    return next(b.text for b in msg.content if b.type == "text")
+    text = next(b.text for b in msg.content if b.type == "text").strip()
+    if text.startswith("```"):
+        text = text.split("\n", 1)[1].rsplit("```", 1)[0]
+    return text.strip()
 
 def generate_pattern(description: str) -> tuple[Pattern, list[dict]]:
     similar = search_patterns(description, k=5)
