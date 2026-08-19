@@ -69,7 +69,8 @@ class RavelryClient:
         r.raise_for_status()
         patterns = []
         for raw in r.json().get("patterns", []):
-            source_url = raw.get("free_download_href") or raw.get("url") or ""
+            permalink = raw.get("permalink", "")
+            source_url = f"https://www.ravelry.com/patterns/library/{permalink}" if permalink else ""
             parts = []
             if fetch_instructions and source_url:
                 parts = _parse_instructions_html(source_url)

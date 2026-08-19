@@ -11,15 +11,14 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from data.scraper.ravelry import RavelryClient
-from data.validator import validate_pattern
 
 OUTPUT_DIR = Path("data/patterns")
 
 # (name, search_kwargs, fraction)
 CATEGORIES = [
     ("amigurumi",  {"query": "amigurumi"},    0.25),
-    ("clothing",   {"pc": "clothing"},         0.20),
-    ("home",       {"pc": "home"},             0.15),
+    ("clothing",   {"category": "clothing"},         0.20),
+    ("home",       {"category": "home"},             0.15),
     ("motifs",     {"query": "granny square"}, 0.15),
     ("lace",       {"query": "lace"},          0.15),
     ("freeform",   {"query": "irish crochet"}, 0.10),
@@ -42,19 +41,13 @@ def run_pipeline(target: int = 500) -> None:
         page = 1
         while need > 0:
             patterns = client.search_free_patterns(
-                page=page, page_size=min(need, 100), **search_kwargs
+                page=page, page_size=min(need, 100), fetch_instructions=False, **search_kwargs
             )
             if not patterns:
                 break
             for p in patterns:
-                if not p.parts:
-                    continue
-                errors = validate_pattern(p)
-                if errors:
-                    print(f"  [skip] {p.title}: {errors[:1]}", flush=True)
-                    continue
                 fname = cat_dir / f"{abs(hash(p.title + (p.source_url or '')))}.json"
-                fname.write_text(p.model_dump_json(indent=2))
+                fname.write_text(p.model_dump_json(indent=2), encoding="utf-8")
                 need -= 1
                 if need <= 0:
                     break
