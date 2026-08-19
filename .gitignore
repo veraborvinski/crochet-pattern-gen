@@ -6,3 +6,4 @@ __pycache__/
 .env
 data/patterns/
 patterns.db
+training/dataset.json
