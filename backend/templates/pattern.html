@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  body { font-family: Georgia, serif; max-width: 700px; margin: 40px auto; color: #222; }
+  h1 { font-size: 1.6em; border-bottom: 2px solid #333; padding-bottom: 8px; }
+  h2 { font-size: 1.1em; margin-top: 1.5em; color: #444; }
+  .meta { color: #666; font-size: 0.9em; margin-bottom: 1em; }
+  .attribution { font-size: 0.8em; color: #888; margin-top: 0.5em; }
+  table { border-collapse: collapse; width: 100%; margin: 0.5em 0; }
+  td, th { padding: 4px 8px; text-align: left; }
+  tr.round td:first-child { font-weight: bold; width: 4em; }
+  tr.round td:last-child { color: #555; width: 5em; text-align: right; }
+  .inspiration { font-size: 0.8em; color: #888; margin-top: 2em; border-top: 1px solid #ddd; padding-top: 0.5em; }
+</style>
+</head>
+<body>
+  <h1>{{ pattern.title }}</h1>
+  <div class="meta">
+    Difficulty: {{ pattern.difficulty.value | capitalize }} &nbsp;|&nbsp;
+    Hook: {{ pattern.materials.hook }} &nbsp;|&nbsp;
+    Gauge: {{ pattern.gauge or "Not specified" }}
+  </div>
+  {% if pattern.author or pattern.source_url %}
+  <div class="attribution">
+    Pattern by {{ pattern.author or "Unknown" }}
+    {% if pattern.source_url %} — <a href="{{ pattern.source_url }}">{{ pattern.source_url }}</a>{% endif %}
+  </div>
+  {% endif %}
+
+  <h2>Materials</h2>
+  <ul>
+  {% for yarn in pattern.materials.yarn %}
+    <li>{{ yarn.weight | capitalize }} weight yarn{% if yarn.color %}, {{ yarn.color }}{% endif %}{% if yarn.amount %} ({{ yarn.amount }}){% endif %}</li>
+  {% endfor %}
+    <li>Crochet hook: {{ pattern.materials.hook }}</li>
+  {% for notion in pattern.materials.notions %}
+    <li>{{ notion }}</li>
+  {% endfor %}
+  </ul>
+
+  {% if pattern.abbreviations %}
+  <h2>Abbreviations</h2>
+  <p>{% for abbr, meaning in pattern.abbreviations.items() %}{{ abbr }}: {{ meaning }}{% if not loop.last %}, {% endif %}{% endfor %}</p>
+  {% endif %}
+
+  {% for part in pattern.parts %}
+  <h2>{{ part.name }}{% if part.make > 1 %} (make {{ part.make }}){% endif %}</h2>
+  <table>
+  {% for r in part.rounds %}
+    <tr class="round">
+      <td>Rnd {{ r.round }}</td>
+      <td>{{ r.instruction }}</td>
+      <td>({{ r.stitch_count }})</td>
+    </tr>
+  {% endfor %}
+  </table>
+  {% endfor %}
+
+  {% if pattern.assembly %}
+  <h2>Assembly</h2>
+  <p>{{ pattern.assembly }}</p>
+  {% endif %}
+
+  {% if inspiration %}
+  <div class="inspiration">
+    <strong>Inspired by:</strong>
+    {% for s in inspiration %}
+      {% if s.source_url %}<a href="{{ s.source_url }}">{{ s.title }}</a>{% else %}{{ s.title }}{% endif %}
+      {% if s.author %} by {{ s.author }}{% endif %}{% if not loop.last %}, {% endif %}
+    {% endfor %}
+  </div>
+  {% endif %}
+</body>
+</html>
