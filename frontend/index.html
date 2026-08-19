@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crochet Pattern Generator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Crochet Pattern Generator</h1>
+  <p class="tagline">Describe what you want to make — get a complete pattern.</p>
+
+  <textarea id="description" placeholder="e.g. A small amigurumi strawberry, about 3 inches tall, beginner friendly, worsted weight yarn"></textarea>
+  <div class="controls">
+    <button id="generateBtn">Generate Pattern</button>
+    <label class="toggle-label">
+      <input type="checkbox" id="ukToggle"> Show UK terms
+    </label>
+  </div>
+
+  <div id="output" class="output">
+    <div class="tabs">
+      <div class="tab active" data-tab="patternReadable">Pattern</div>
+      <div class="tab" data-tab="patternRaw">JSON</div>
+    </div>
+    <div id="patternReadable" class="tab-content active">
+      <div id="patternText"></div>
+      <div id="inspiration" style="display:none"></div>
+    </div>
+    <div id="patternRaw" class="tab-content">
+      <pre id="patternJson"></pre>
+    </div>
+    <div class="export-bar">
+      <button id="exportBtn">Download PDF</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
