@@ -23,9 +23,12 @@ class GenerateRequest(BaseModel):
 
 @app.post("/generate")
 def generate(req: GenerateRequest):
-    pattern, inspiration = generate_pattern(req.description)
-    pid = store_pattern(pattern)
-    return {"id": pid, "pattern": pattern.model_dump(), "inspiration": inspiration}
+    try:
+        pattern, inspiration = generate_pattern(req.description)
+        pid = store_pattern(pattern)
+        return {"id": pid, "pattern": pattern.model_dump(), "inspiration": inspiration}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/pattern/{pattern_id}")
 def get_pattern(pattern_id: str):

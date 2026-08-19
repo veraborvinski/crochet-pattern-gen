@@ -21,7 +21,7 @@ class Materials(BaseModel):
 class Round(BaseModel):
     round: int
     instruction: str
-    stitch_count: int
+    stitch_count: int = 0
 
 class Part(BaseModel):
     name: str
