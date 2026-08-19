@@ -1,6 +1,7 @@
 from __future__ import annotations
-from pydantic import BaseModel
-from typing import Optional
+import re
+from pydantic import BaseModel, field_validator
+from typing import Optional, Any
 from enum import Enum
 
 class Difficulty(str, Enum):
@@ -22,6 +23,14 @@ class Round(BaseModel):
     round: int
     instruction: str
     stitch_count: int = 0
+
+    @field_validator("round", "stitch_count", mode="before")
+    @classmethod
+    def coerce_int(cls, v: Any) -> int:
+        if isinstance(v, int):
+            return v
+        m = re.search(r"\d+", str(v))
+        return int(m.group()) if m else 0
 
 class Part(BaseModel):
     name: str
