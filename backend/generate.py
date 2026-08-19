@@ -32,7 +32,7 @@ def _llm_generate(description: str, examples: list[Pattern]) -> str:
         for p in examples[:3]
     )
     msg = _get_client().messages.create(
-        model="claude-3-5-haiku-20241022",
+        model="claude-haiku-4-5-20251001",
         max_tokens=4096,
         system=_SYSTEM,
         messages=[{"role": "user", "content":
