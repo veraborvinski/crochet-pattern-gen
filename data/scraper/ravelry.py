@@ -58,20 +58,14 @@ class RavelryClient:
         )
 
     def search_free_patterns(
-        self, category: str, page: int = 1, page_size: int = 100, fetch_instructions: bool = True
+        self, category: str = None, query: str = None, page: int = 1, page_size: int = 100, fetch_instructions: bool = True
     ) -> list[Pattern]:
-        r = httpx.get(
-            f"{RAVELRY_API}/patterns/search.json",
-            params={
-                "craft": "crochet",
-                "availability": "free",
-                "pc": category,
-                "page": page,
-                "page_size": page_size,
-                "sort": "best",
-            },
-            auth=self.auth,
-        )
+        params = {"craft": "crochet", "availability": "free", "page": page, "page_size": page_size, "sort": "best"}
+        if category:
+            params["pc"] = category
+        if query:
+            params["query"] = query
+        r = httpx.get(f"{RAVELRY_API}/patterns/search.json", params=params, auth=self.auth)
         r.raise_for_status()
         patterns = []
         for raw in r.json().get("patterns", []):
